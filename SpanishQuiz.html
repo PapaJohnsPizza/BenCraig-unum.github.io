@@ -1,0 +1,300 @@
+<h1>Quiz</h1>
+<div class="quiz-container">
+  <div id="quiz"></div>
+</div>
+<div id="buttons">
+<button id="previous">Previous Question</button>
+<button id="next">Next Question</button>
+<button id="submit">Submit Quiz</button>
+<button id="explain">Explanations</button>
+<button id="reset">Reset Quiz</button>
+</div>
+<div id="results"></div>
+
+<script>
+(function quiz() {
+
+alert("In this secetion you will demonstrate a command of basic Spanish grammar rules. ")
+
+  const myQuestions = [
+		{
+	  question: "¿cómo se dice “The black and yellow bees” en español?",
+	  answers: {
+		a: "Se dice las abejas amarillas y negras.",
+		b: "Se dice el abeja amarilla y negro.",
+		c: "Se dice la amarillas y negras abejas.",
+		d: "Se dice los abejas amarillos y negros. "
+	  },
+	  correctAnswer: "a"
+	},
+	 	{
+	  question: "¿Cómo se dice “The red, green, and orange snake” en español?",
+	  answers: {
+		a: "Se dice el serpiente rojo, verde, y anaranjado.",
+		b: "Se dice las serpientes rojas, verdes, y anaranjadas.",
+		c: "Se dice la serpiente roja, verde, y anaranjada.",
+		d: "Se dice los serpiente roja, verdes, y anaranjados."
+	  },
+	  correctAnswer: "c"
+	},
+	 	{
+	  question: "Cómo se dice “it is 6:44” en español; cómo se dice “it is July 30th, 2002” en español.",
+	  answers: {
+		a: "Se dice son las seis y cuarenta y cuatro; se dice el treinta de julio del dos mil dos.",
+		b: "Se dice son las seis y cuarenta y cuatro; se dice el julio de treinta del dos mil dos. ",
+		c: "Se dice es el seis y cuarenta y cuatro; se dice el treinta de julio del dos mil dos.",
+		d: "Se dice es el seis y cuarenta y cuatro; se dice el julio de treinta del dos mil dos. "
+	  },
+	  correctAnswer: "a"
+	},
+	 	{
+	  question: "¿Que es treinta y uno más veintiocho?",
+	  answers: {
+		a: "Es sesenta y nueve",
+		b: "Son sesenta y nueve",
+		c: "Es cincuenta y nueve",
+		d: "Son cincuenta y nueve"
+	  },
+	  correctAnswer: "d"
+	},
+	 	{
+	  question: "How do I conjugate “I run” in Spanish in the present tense?",
+	  answers: {
+		a: "Yo soy correr",
+		b: "Yo correr",
+		c: "Yo corro",
+		d: "Yo corrar"
+	  },
+	  correctAnswer: "c"
+	},
+	 	{
+	  question: "How do I conjugate  “We swim” in spanish in the present tense?",
+	  answers: {
+		a: "Nosotros somos nadar; Nosotras somos nadar",
+		b: "Nosotros nadamos; Nosotras nadamos",
+		c: "Nosotros nademos; Nosotras nademos",
+		d: "Nosotros nadimos; Nosotras nadimos"
+	  },
+	  correctAnswer: "b"
+	},
+	 
+
+  ];
+
+  function buildQuiz() {
+	// we'll need a place to store the HTML output
+	const output = [];
+
+	// for each question...
+	myQuestions.forEach((currentQuestion, questionNumber) => {
+	
+		const image = [];
+		
+
+	
+	  // we'll want to store the list of answer choices
+	  const answers = [];
+
+	  // and for each available answer...
+	  for (letter in currentQuestion.answers) {
+		// ...add an HTML radio button
+		answers.push(
+		  `<label>
+			 <input type="radio" name="question${questionNumber}" value="${letter}">
+			  ${letter} :
+			  ${currentQuestion.answers[letter]}
+		   </label>`
+		);
+	  }
+
+	  // add this question and its answers to the output
+	  output.push(
+		`<div class="slide">
+		   <div class="question"> ${currentQuestion.question} </div>
+		   <div class="answers"> ${answers.join("")} </div>
+		 </div>`
+	  );
+	});
+
+	// finally combine our output list into one string of HTML and put it on the page
+	quizContainer.innerHTML = output.join("");
+  }
+
+  function showResults() {
+	// gather answer containers from our quiz
+	const answerContainers = quizContainer.querySelectorAll(".answers");
+
+	// keep track of user's answers
+	var numCorrect = 0;
+
+	// for each question...
+	myQuestions.forEach((currentQuestion, questionNumber) => {
+	  // find selected answer
+	  const answerContainer = answerContainers[questionNumber];
+	  const selector = `input[name=question${questionNumber}]:checked`;
+	  const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+
+	  // if answer is correct
+	  if (userAnswer === currentQuestion.correctAnswer) {
+		// add to the number of correct answers
+		numCorrect++;
+		// color the answers green
+		answerContainers[questionNumber].style.color = "green";
+	  } else {
+		// if answer is wrong or blank
+		// color the answers red
+		answerContainers[questionNumber].style.color = "red";
+	  }
+	});
+
+	// show number of correct answers out of total
+	resultsContainer.innerHTML = `${numCorrect} out of ${myQuestions.length}`;
+}
+
+function explanation(){
+if (window.confirm('click "Ok" for explanations.')) 
+{
+window.location.href='https://google.com';
+};
+}
+
+  function showSlide(n) {
+	slides[currentSlide].classList.remove("active-slide");
+	slides[n].classList.add("active-slide");
+	currentSlide = n;
+	
+	if (currentSlide === 0) {
+	  previousButton.style.display = "none";
+	} else {
+	  previousButton.style.display = "inline-block";
+	}
+	
+	if (currentSlide === slides.length - 1) {
+	  nextButton.style.display = "none";
+	  submitButton.style.display = "inline-block";
+	} else {
+	  nextButton.style.display = "inline-block";
+	  submitButton.style.display = "none";
+	}
+	if (currentSlide === slides.length - 1) {
+	  resetButton.style.display = "inline-block";
+		explainButton.style.display = "inline-block";
+	} else {
+	  resetButton.style.display = "none";
+		explainButton.style.display = "none";
+	}
+
+  }
+  function showNextSlide() {
+	showSlide(currentSlide + 1);
+  }
+
+  function showPreviousSlide() {
+	showSlide(currentSlide - 1);
+  }
+
+  const quizContainer = document.getElementById("quiz");
+  const resultsContainer = document.getElementById("results");
+  const submitButton = document.getElementById("submit");
+  const resetButton = document.getElementById("reset");
+  // display quiz right away
+  buildQuiz();
+
+  const previousButton = document.getElementById("previous");
+  const nextButton = document.getElementById("next");
+  const explainButton = document.getElementById("explain");
+  const slides = document.querySelectorAll(".slide");
+  let currentSlide = 0;
+
+  showSlide(0);
+
+  // on submit, show results
+  submitButton.addEventListener("click", showResults);
+  nextButton.addEventListener("click", showNextSlide);
+  explainButton.addEventListener("click", explanation);
+  previousButton.addEventListener("click", showPreviousSlide);
+  resetButton.addEventListener("click", resetQuiz);
+  
+  function resetQuiz(){
+	quiz()
+	let n = 0;
+	slides[currentSlide].classList.remove("active-slide");
+	slides[n].classList.add("active-slide");
+	currentSlide = n;
+	resultsContainer.innerHTML = null
+  }
+  
+})();
+</script>
+<style>
+@import url(https://fonts.googleapis.com/css?family=Work+Sans:300,600);
+
+body{
+	font-size: 20px;
+	font-family: 'Work Sans', sans-serif;
+	color: #333;
+  font-weight: 300;
+  text-align: center;
+  background-color: #d6eaf8;
+}
+h1{
+  font-weight: 300;
+  margin: 0px;
+  padding: 10px;
+  font-size: 20px;
+  background-color: #21618c;
+  color: #fff;
+}
+.question{
+  font-size: 35px;
+  margin-bottom: 30px;
+}
+.answers {
+  margin-bottom: 25px;
+  text-align: left;
+  display: inline-block;
+}
+.answers label{
+  display: block;
+  margin-bottom: 10px;
+}
+button{
+  font-family: 'Work Sans', sans-serif;
+	font-size: 22px;
+	background-color: #2874a6;
+	color: #f8f9f9;
+	border: 1px;
+	border-radius: 3px;
+	padding: 30px;
+	cursor: pointer;
+	margin-bottom: 10px;
+}
+button:hover{
+	background-color: #3498db;
+}
+
+#buttons{
+	margin-top:200px;
+}
+
+
+
+.slide{
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.active-slide{
+  opacity: 1;
+  z-index: 2;
+}
+.quiz-container{
+  position: relative;
+  height: 200px;
+  margin-top: 40px;
+}
+</style> 
